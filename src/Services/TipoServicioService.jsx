@@ -43,34 +43,18 @@ export async function obtenerTipoServicio(id) {
 }
 
 export async function newTipoServicio(tipoServicio) {
-  try {
-    if (tipoServicio.id > 0) {
-      const { data } = await axios({
-        method: "PUT",
-        url: `${API_URL}/tipoServicios/${tipoServicio.id}`,
-        data: tipoServicio,
-      });
-    } else {
-      const { data } = await axios({
-        method: "POST",
-        url: `${API_URL}/tiposServicios`,
-        data: tipoServicio,
-      });
-    }
-
-    return data;
-  } catch (e) {
-    //  console.error(e);
-    // if (e.response && e.response.status === 400) {
-    //     //setMensaje('Error: Los datos proporcionados son inválidos');
-    //     alert('Error: Los datos proporcionados son inválidos');
-    // }
-    // else {
-    //     alert(e.response);
-    //     alert(e.response.status);
-    //     // setMensaje('Error al conectarse con el servidor');
-    // }
-    return null;
+  if (tipoServicio.id > 0) {
+    const { data } = await axios({
+      method: "PUT",
+      url: `${API_URL}/tipoServicios/${tipoServicio.id}`,
+      data: tipoServicio,
+    });
+  } else {
+    const { data } = await axios({
+      method: "POST",
+      url: `${API_URL}/tiposServicios`,
+      data: tipoServicio,
+    });
   }
 }
 

@@ -1,7 +1,6 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ITEMS_PER_PAGE, API_URL } from "../App.config";
+import { Link } from "react-router-dom";
+import { ITEMS_PER_PAGE } from "../App.config";
 import { ClienteContext } from "./ClienteContext";
 import { obtenerClientes, eliminarCliente } from "../Services/ClienteService";
 
@@ -14,7 +13,7 @@ export default function ListadoCliente() {
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
-  }); //se utiliza para el orden
+  });
 
   useEffect(() => {
     getDatos();
@@ -52,8 +51,6 @@ export default function ListadoCliente() {
       console.error("Error al eliminar el cliente:", error);
     }
   };
-
-  ///////////////////////////////////////Para el orden de las tablas///////////////////////////////////////////////////
 
   const handleSort = (key) => {
     let direction = "ascending";
@@ -194,9 +191,6 @@ export default function ListadoCliente() {
           </Link>
         </div>
       </div>
-
-      {/* /////////////////////// Esto se utiliza para hacer la paginacion  ///////////////////////////////// */}
-
       <div className="pagination d-md-flex justify-content-md-end">
         {Array.from({ length: totalPages }, (_, i) => i).map((pageNumber) => (
           <a
@@ -211,8 +205,6 @@ export default function ListadoCliente() {
           </a>
         ))}
       </div>
-
-      {/* /////////////////////// fin de la paginacion  ///////////////////////////////// */}
     </div>
   );
 }

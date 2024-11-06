@@ -44,34 +44,18 @@ export async function obtenerCliente(id) {
 }
 
 export async function newCliente(cliente) {
-  try {
-    if (cliente.id > 0) {
-      const { data } = await axios({
-        method: "PUT",
-        url: `${API_URL}/cliente/${cliente.id}`,
-        data: cliente,
-      });
-    } else {
-      const { data } = await axios({
-        method: "POST",
-        url: `${API_URL}/cliente`,
-        data: cliente,
-      });
-    }
-
-    return data;
-  } catch (e) {
-    //  console.error(e);
-    // if (e.response && e.response.status === 400) {
-    //     //setMensaje('Error: Los datos proporcionados son inválidos');
-    //     alert('Error: Los datos proporcionados son inválidos');
-    // }
-    // else {
-    //     alert(e.response);
-    //     alert(e.response.status);
-    //     // setMensaje('Error al conectarse con el servidor');
-    // }
-    return null;
+  if (cliente.id > 0) {
+    const { data } = await axios({
+      method: "PUT",
+      url: `${API_URL}/cliente/${cliente.id}`,
+      data: cliente,
+    });
+  } else {
+    const { data } = await axios({
+      method: "POST",
+      url: `${API_URL}/cliente`,
+      data: cliente,
+    });
   }
 }
 

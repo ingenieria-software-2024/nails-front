@@ -156,7 +156,10 @@ export default function ListadoArticulosVenta() {
                     >
                       <img
                         src={IMAGEN_EDIT}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Editar
                     </Link>
@@ -168,7 +171,10 @@ export default function ListadoArticulosVenta() {
                       {" "}
                       <img
                         src={IMAGEN_DELETE}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Eliminar
                     </button>

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
@@ -18,7 +17,7 @@ export default function ListadoTipoServicio() {
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
-  }); //se utiliza para el orden
+  });
 
   useEffect(() => {
     console.log("entro ");
@@ -58,7 +57,6 @@ export default function ListadoTipoServicio() {
     }
   };
 
-  ///////////////////////////////////////Para el orden de las tablas///////////////////////////////////////////////////
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -82,8 +80,6 @@ export default function ListadoTipoServicio() {
     }
     return sorted;
   };
-
-  ///////////////////////////////////////Hasta aca para el orden de las tablas///////////////////////////////////////////////////
 
   return (
     <div className="container">
@@ -154,7 +150,10 @@ export default function ListadoTipoServicio() {
                     >
                       <img
                         src={IMAGEN_EDIT}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Editar
                     </Link>
@@ -166,7 +165,10 @@ export default function ListadoTipoServicio() {
                       {" "}
                       <img
                         src={IMAGEN_DELETE}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Eliminar
                     </button>
@@ -190,9 +192,6 @@ export default function ListadoTipoServicio() {
           </Link>
         </div>
       </div>
-
-      {/* /////////////////////// Esto se utiliza para hacer la paginacion  ///////////////////////////////// */}
-
       <div className="pagination d-md-flex justify-content-md-end">
         {Array.from({ length: totalPages }, (_, i) => i).map((pageNumber) => (
           <a
@@ -207,8 +206,6 @@ export default function ListadoTipoServicio() {
           </a>
         ))}
       </div>
-
-      {/* /////////////////////// fin de la paginacion  ///////////////////////////////// */}
     </div>
   );
 }

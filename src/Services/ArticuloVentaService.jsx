@@ -29,36 +29,20 @@ export async function obtenerArticuloVenta(id) {
 }
 
 export async function newArticuloVenta(model) {
-  try {
-    if (model.id > 0) {
-      window.alert("entra por el put");
-      const { data } = await axios({
-        method: "PUT",
-        url: `${API_URL}/articulos/${model.id}`,
-        data: model,
-      });
-    } else {
-      window.alert("entra por el post");
-      const { data } = await axios({
-        method: "POST",
-        url: `${API_URL}/articulos`,
-        data: model,
-      });
-    }
-
-    return data;
-  } catch (e) {
-    //  console.error(e);
-    // if (e.response && e.response.status === 400) {
-    //     //setMensaje('Error: Los datos proporcionados son inválidos');
-    //     alert('Error: Los datos proporcionados son inválidos');
-    // }
-    // else {
-    //     alert(e.response);
-    //     alert(e.response.status);
-    //     // setMensaje('Error al conectarse con el servidor');
-    // }
-    return null;
+  if (model.id > 0) {
+    window.alert("entra por el put");
+    const { data } = await axios({
+      method: "PUT",
+      url: `${API_URL}/articulos/${model.id}`,
+      data: model,
+    });
+  } else {
+    window.alert("entra por el post");
+    const { data } = await axios({
+      method: "POST",
+      url: `${API_URL}/articulos`,
+      data: model,
+    });
   }
 }
 

@@ -172,7 +172,10 @@ export default function ListadoServicio() {
                       >
                         <img
                           src={IMAGEN_EDIT}
-                          style={{ width: "20px", height: "20px" }}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                          }}
                         />
                         Editar
                       </Link>
@@ -182,7 +185,10 @@ export default function ListadoServicio() {
                       >
                         <img
                           src={IMAGEN_DELETE}
-                          style={{ width: "20px", height: "20px" }}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                          }}
                         />
                         Eliminar
                       </button>

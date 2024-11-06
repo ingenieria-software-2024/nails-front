@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
@@ -150,7 +149,10 @@ export default function ListadoLinea() {
                     >
                       <img
                         src={IMAGEN_EDIT}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Editar
                     </Link>
@@ -162,7 +164,10 @@ export default function ListadoLinea() {
                       {" "}
                       <img
                         src={IMAGEN_DELETE}
-                        style={{ width: "20px", height: "20px" }}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                        }}
                       />
                       Eliminar
                     </button>

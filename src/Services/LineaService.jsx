@@ -44,34 +44,18 @@ export async function obtenerLinea(id) {
 }
 
 export async function newLinea(linea) {
-  try {
-    if (linea.id > 0) {
-      const { data } = await axios({
-        method: "PUT",
-        url: `${API_URL}/linea/${linea.id}`,
-        data: linea,
-      });
-    } else {
-      const { data } = await axios({
-        method: "POST",
-        url: `${API_URL}/linea`,
-        data: linea,
-      });
-    }
-
-    return data;
-  } catch (e) {
-    //  console.error(e);
-    // if (e.response && e.response.status === 400) {
-    //     //setMensaje('Error: Los datos proporcionados son inválidos');
-    //     alert('Error: Los datos proporcionados son inválidos');
-    // }
-    // else {
-    //     alert(e.response);
-    //     alert(e.response.status);
-    //     // setMensaje('Error al conectarse con el servidor');
-    // }
-    return null;
+  if (linea.id > 0) {
+    const { data } = await axios({
+      method: "PUT",
+      url: `${API_URL}/linea/${linea.id}`,
+      data: linea,
+    });
+  } else {
+    const { data } = await axios({
+      method: "POST",
+      url: `${API_URL}/linea`,
+      data: linea,
+    });
   }
 }
 
