@@ -8,7 +8,12 @@ export async function obtenerServicios(consulta, page, pageSize) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: urlBase,
+      params: {
+        consulta,
+        page,
+        pageSize,
+      },
     });
     return data;
   } catch (error) {
