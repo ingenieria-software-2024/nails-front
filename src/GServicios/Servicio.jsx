@@ -21,10 +21,7 @@ export default function Servicio({ title }) {
   const [errors, setErrors] = useState({
     fecha: "",
     cliente: "",
-    servicios: Array(servicios.length).fill({
-      tipoServicio: "",
-      precio: "",
-    }),
+    servicios: [],
   });
 
   useEffect(() => {
@@ -37,22 +34,13 @@ export default function Servicio({ title }) {
   useEffect(() => {
     const nuevoTotal = servicios.reduce(
       (acc, servicio) => acc + (parseFloat(servicio.precio) || 0),
-      0,
+      0
     );
     setTotal(nuevoTotal);
   }, [servicios]);
 
-  const cargarModel2 = async () => {
-    if (id > 0) {
-      const resultado = await obtenerServicio(id);
-      setServicio(resultado);
-      setSelectedCliente(resultado.cliente.id); // Establecer el cliente seleccionado
-      setFecha(new Date(resultado.fechaDocumento).toISOString().split("T")[0]); // Establecer la fecha
-      setServicios(resultado.listaItems); // Establecer los item servicios cargados
-    }
-  };
   const cargarModel = async () => {
-    if (id > 0) {
+    if (id) {
       const resultado = await obtenerServicio(id);
       setServicio(resultado);
       setSelectedCliente(String(resultado.cliente.id)); // Convertir a string
@@ -72,22 +60,11 @@ export default function Servicio({ title }) {
   };
 
   const handleAddServicio = () => {
-    setServicios([
-      ...servicios,
-      { tipoServicio: "", precio: "", observaciones: "" },
-    ]);
+    setServicios([...servicios, { tipoServicio: "", precio: "", observaciones: "" }]);
   };
 
   const handleRemoveServicio = (index) => {
-    const newServicios = [...servicios];
-    newServicios.splice(index, 1);
-    setServicios(newServicios);
-  };
-
-  const handleServicioChangeBoorar = (index, event) => {
-    const { name, value } = event.target;
-    const newServicios = [...servicios];
-    newServicios[index] = { ...newServicios[index], [name]: value };
+    const newServicios = servicios.filter((_, i) => i !== index);
     setServicios(newServicios);
   };
 
@@ -97,7 +74,7 @@ export default function Servicio({ title }) {
 
     if (name === "tipoServicio") {
       const tipoServicioSeleccionado = tiposServicio.find(
-        (tipo) => tipo.id === parseInt(value),
+        (tipo) => tipo.id === parseInt(value)
       );
       newServicios[index] = {
         ...newServicios[index],

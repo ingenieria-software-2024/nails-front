@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
-import { TipoServicioContext } from "./TipoServicioContext";
+import { ServicioContext } from "./ServicioContext";
 import {
-  obtenerTiposServicios,
-  eliminarTipoServicio,
-} from "../Services/TipoServicioService";
+  eliminarServicio,
+  obtenerServicios,
+} from "../Services/ServicioService";
 
-export default function ListadoTipoServicio() {
-  const { tiposServicios, setTiposServicios } = useContext(TipoServicioContext);
-
+export default function ListadoServicio() {
+  const { servicios, setServicios } = useContext(ServicioContext);
   const [consulta, setConsulta] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
@@ -18,45 +17,58 @@ export default function ListadoTipoServicio() {
     key: null,
     direction: "ascending",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  // Llamar a la API para obtener los servicios cada vez que cambian los parámetros de búsqueda o la paginación
   useEffect(() => {
-    console.log("entro ");
     getDatos();
   }, [page, pageSize, consulta]);
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
-
+  // Función para obtener los servicios
   const getDatos = async () => {
-    console.log("carga " + page);
-    obtenerTiposServicios(consulta, page, pageSize)
-      .then((response) => {
-        setTiposServicios(response.content);
-        setTotalPages(response.totalPages);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
-  };
-
-  const handConsultaChange = (e) => {
-    setConsulta(e.target.value);
-  };
-
-  const eliminar = async (id) => {
+    setLoading(true);
+    setError(null);
     try {
-      const eliminacionExitosa = await eliminarTipoServicio(id);
-      if (eliminacionExitosa) {
-        getDatos();
-      } else {
-        console.error("Error al eliminar el tipo servicio");
-      }
-    } catch (error) {
-      console.error("Error al eliminar el tipo servicioss:", error);
+      const response = await obtenerServicios(consulta, page, pageSize);
+      setServicios(response.content);
+      setTotalPages(response.totalPages);
+    } catch (err) {
+      setError("Error al obtener los servicios.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
+    }
+  };
+
+  // Actualizar el valor de la búsqueda
+  const handleConsultaChange = (e) => {
+    setConsulta(e.target.value);
+  };
+
+  // Función para eliminar un servicio
+  const eliminar = async (id) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este servicio?")) {
+      try {
+        const eliminacionExitosa = await eliminarServicio(id);
+        if (eliminacionExitosa) {
+          getDatos(); // Refrescar la lista de servicios después de eliminar
+        } else {
+          console.error("Error al eliminar servicio");
+        }
+      } catch (error) {
+        console.error("Error al eliminar servicio:", error);
+      }
+    }
+  };
+
+  // Función para ordenar los servicios por una clave
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -65,8 +77,9 @@ export default function ListadoTipoServicio() {
     setSortConfig({ key, direction });
   };
 
+  // Ordenar los servicios según la configuración de orden
   const sortedData = () => {
-    const sorted = [...tiposServicios];
+    const sorted = [...servicios];
     if (sortConfig.key !== null) {
       sorted.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -84,8 +97,8 @@ export default function ListadoTipoServicio() {
   return (
     <div className="container">
       <div>
-        <h1> Gestión de Tipo Servicio </h1>
-        <hr></hr>
+        <h1>Gestión de servicios</h1>
+        <hr />
       </div>
 
       <div className="row d-md-flex justify-content-md-end">
@@ -93,119 +106,138 @@ export default function ListadoTipoServicio() {
           <input
             id="consulta"
             name="consulta"
-            className="form-control me-2"
+            className="form-control"
             type="search"
-            aria-label="Search"
+            placeholder="Buscar servicio"
             value={consulta}
-            onChange={handConsultaChange}
-          ></input>
+            onChange={handleConsultaChange}
+          />
         </div>
         <div className="col-1">
           <button
             onClick={() => getDatos()}
             className="btn btn-outline-success"
-            type="submit"
           >
             Buscar
           </button>
         </div>
       </div>
-      <hr></hr>
-      <table className="table table-striped table-hover align-middle">
-        <thead className="table-dark text-center">
-          <tr>
-            <th scope="col" onClick={() => handleSort("id")}>
-              #
-              {sortConfig.key === "id" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
-              )}
-            </th>
-            <th scope="col" onClick={() => handleSort("denominacion")}>
-              Denominación
-              {sortConfig.key === "denominacion" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
-              )}
-            </th>
 
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            //iteramos empleados
-            sortedData().map((tipoServicio, indice) => (
-              <tr key={indice}>
-                <th scope="row">{tipoServicio.id}</th>
-                <td>{tipoServicio.denominacion}</td>
+      <hr />
 
-                <td className="text-center">
-                  <div>
-                    <Link
-                      to={`/tipoServicio/${tipoServicio.id}`}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      <img
-                        src={IMAGEN_EDIT}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Editar
-                    </Link>
+      {loading ? (
+        <div className="text-center">Cargando...</div>
+      ) : error ? (
+        <div className="alert alert-danger">{error}</div>
+      ) : (
+        <>
+          <table className="table table-striped table-hover align-middle">
+            <thead className="table-dark text-center">
+              <tr>
+                <th scope="col" onClick={() => handleSort("id")}>
+                  #
+                  {sortConfig.key === "id" && (
+                    <span>
+                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                    </span>
+                  )}
+                </th>
 
-                    <button
-                      onClick={() => eliminar(tipoServicio.id)}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      {" "}
-                      <img
-                        src={IMAGEN_DELETE}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Eliminar
-                    </button>
-                  </div>
-                </td>
+                <th scope="col" onClick={() => handleSort("cliente")}>
+                  Cliente
+                  {sortConfig.key === "cliente" && (
+                    <span>
+                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                    </span>
+                  )}
+                </th>
+                <th scope="col" onClick={() => handleSort("fecha")}>
+                  Fecha
+                  {sortConfig.key === "fecha" && (
+                    <span>
+                      {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
+                    </span>
+                  )}
+                </th>
+                <th scope="col">Acciones</th>
               </tr>
-            ))
-          }
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {sortedData().map((servicio, indice) => (
+                <tr key={indice}>
+                  <th scope="row">{servicio.id}</th>
 
-      <div className="row d-md-flex justify-content-md-end">
-        <div className="col-4">
-          <Link to={`/tipoServicio`} className="btn btn-success btn-sm me-3">
-            Nuevo
-          </Link>
-        </div>
-        <div className="col-4">
-          <Link to={`/`} className="btn btn-info btn-sm me-3">
-            Regresar
-          </Link>
-        </div>
-      </div>
-      <div className="pagination d-md-flex justify-content-md-end">
-        {Array.from({ length: totalPages }, (_, i) => i).map((pageNumber) => (
-          <a
-            key={pageNumber}
-            href="#"
-            onClick={(e) => {
-              e.preventDefault(); // Previene el comportamiento predeterminado del enlace
-              handlePageChange(pageNumber);
-            }}
-          >
-            | {pageNumber} |
-          </a>
-        ))}
-      </div>
+                  <td>{servicio.clienteRazonSocial}</td>
+                  <td>{servicio.fechaDocumento}</td>
+                  <td className="text-center">
+                    <div>
+                      <Link
+                        to={`/servicio/${servicio.id}`}
+                        className="btn btn-link btn-sm me-3"
+                      >
+                        <img
+                          src={IMAGEN_EDIT}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                          }}
+                          alt="Editar"
+                        />
+                        Editar
+                      </Link>
+                      <button
+                        onClick={() => eliminar(servicio.id)}
+                        className="btn btn-link btn-sm me-3"
+                      >
+                        <img
+                          src={IMAGEN_DELETE}
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                          }}
+                          alt="Eliminar"
+                        />
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Paginación */}
+          <div className="d-md-flex justify-content-md-end">
+            <button
+              className="btn btn-outline-primary me-2"
+              disabled={page === 0}
+              onClick={() => handlePageChange(page - 1)}
+            >
+              Anterior
+            </button>
+            <button
+              className="btn btn-outline-primary"
+              disabled={page >= totalPages - 1}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
+
+          <div className="row d-md-flex justify-content-md-end mt-3">
+            <div className="col-4">
+              <Link to={`/servicio`} className="btn btn-success btn-sm">
+                Nuevo
+              </Link>
+            </div>
+            <div className="col-4">
+              <Link to={`/`} className="btn btn-info btn-sm">
+                Regresar
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
