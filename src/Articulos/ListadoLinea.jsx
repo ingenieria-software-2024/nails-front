@@ -14,7 +14,8 @@ export default function ListadoLinea() {
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
-  }); //se utiliza para el orden
+  });
+  const [error, setError] = useState(""); // Estado para manejar errores
 
   useEffect(() => {
     getDatos();
@@ -25,15 +26,16 @@ export default function ListadoLinea() {
   };
 
   const getDatos = async () => {
-    console.log("carga " + page);
-    obtenerLineas(consulta, page, pageSize)
-      .then((response) => {
-        setLineas(response.content);
-        setTotalPages(response.totalPages);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
+    try {
+      console.log("Cargando datos de la página " + page);
+      const response = await obtenerLineas(consulta, page, pageSize);
+      setLineas(response.content);
+      setTotalPages(response.totalPages);
+      setError(""); // Limpiar errores al cargar correctamente
+    } catch (error) {
+      setError("Error al cargar las líneas, por favor intente más tarde.");
+      console.error("Error fetching items:", error);
+    }
   };
 
   const handConsultaChange = (e) => {
@@ -46,14 +48,14 @@ export default function ListadoLinea() {
       if (eliminacionExitosa) {
         getDatos();
       } else {
-        console.error("Error al eliminar la línea");
+        setError("Error al eliminar la línea.");
       }
     } catch (error) {
+      setError("Error al eliminar la línea.");
       console.error("Error al eliminar la línea:", error);
     }
   };
 
-  ///////////////////////////////////////Para el orden de las tablas///////////////////////////////////////////////////
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -78,13 +80,11 @@ export default function ListadoLinea() {
     return sorted;
   };
 
-  ///////////////////////////////////////Hasta aca para el orden de las tablas///////////////////////////////////////////////////
-
   return (
     <div className="container">
       <div>
-        <h1> Gestión de Lineas </h1>
-        <hr></hr>
+        <h1>Gestión de Líneas</h1>
+        <hr />
       </div>
 
       <div className="row d-md-flex justify-content-md-end">
@@ -97,119 +97,106 @@ export default function ListadoLinea() {
             aria-label="Search"
             value={consulta}
             onChange={handConsultaChange}
-          ></input>
+            placeholder="Buscar por denominación"
+          />
         </div>
         <div className="col-1">
           <button
             onClick={() => getDatos()}
             className="btn btn-outline-success"
             type="submit"
+            aria-label="Buscar"
           >
             Buscar
           </button>
         </div>
       </div>
-      <hr></hr>
+      <hr />
+
+      {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar mensaje de error */}
+
       <table className="table table-striped table-hover align-middle">
         <thead className="table-dark text-center">
           <tr>
             <th scope="col" onClick={() => handleSort("id")}>
               #
               {sortConfig.key === "id" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
+                <span>{sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}</span>
               )}
             </th>
             <th scope="col" onClick={() => handleSort("denominacion")}>
               Denominación
               {sortConfig.key === "denominacion" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
+                <span>{sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}</span>
               )}
             </th>
-
             <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {
-            //iteramos empleados
-            sortedData().map((linea, indice) => (
-              <tr key={indice}>
-                <th scope="row">{linea.id}</th>
-                <td>{linea.denominacion}</td>
+          {sortedData().map((linea, indice) => (
+            <tr key={indice}>
+              <th scope="row">{linea.id}</th>
+              <td>{linea.denominacion}</td>
+              <td className="text-center">
+                <div>
+                  <Link to={`/linea/${linea.id}`} className="btn btn-link btn-sm me-3" aria-label="Editar línea">
+                    <img
+                      src={IMAGEN_EDIT}
+                      style={{ width: "20px", height: "20px" }}
+                      alt="Editar"
+                    />
+                    Editar
+                  </Link>
 
-                <td className="text-center">
-                  <div>
-                    <Link
-                      to={`/linea/${linea.id}`}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      <img
-                        src={IMAGEN_EDIT}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Editar
-                    </Link>
-
-                    <button
-                      onClick={() => eliminar(linea.id)}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      {" "}
-                      <img
-                        src={IMAGEN_DELETE}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Eliminar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          }
+                  <button
+                    onClick={() => eliminar(linea.id)}
+                    className="btn btn-link btn-sm me-3"
+                    aria-label="Eliminar línea"
+                  >
+                    <img
+                      src={IMAGEN_DELETE}
+                      style={{ width: "20px", height: "20px" }}
+                      alt="Eliminar"
+                    />
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
       <div className="row d-md-flex justify-content-md-end">
         <div className="col-4">
-          <Link to={`/linea`} className="btn btn-success btn-sm me-3">
+          <Link to={`/linea`} className="btn btn-success btn-sm me-3" aria-label="Crear nueva línea">
             Nuevo
           </Link>
         </div>
         <div className="col-4">
-          <Link to={`/`} className="btn btn-info btn-sm me-3">
+          <Link to={`/`} className="btn btn-info btn-sm me-3" aria-label="Regresar al inicio">
             Regresar
           </Link>
         </div>
       </div>
 
-      {/* /////////////////////// Esto se utiliza para hacer la paginacion  ///////////////////////////////// */}
-
+      {/* Paginación */}
       <div className="pagination d-md-flex justify-content-md-end">
         {Array.from({ length: totalPages }, (_, i) => i).map((pageNumber) => (
           <a
             key={pageNumber}
             href="#"
             onClick={(e) => {
-              e.preventDefault(); // Previene el comportamiento predeterminado del enlace
+              e.preventDefault();
               handlePageChange(pageNumber);
             }}
+            aria-label={`Ir a la página ${pageNumber + 1}`}
           >
-            | {pageNumber} |
+            | {pageNumber + 1} |
           </a>
         ))}
       </div>
-
-      {/* /////////////////////// fin de la paginacion  ///////////////////////////////// */}
     </div>
   );
 }

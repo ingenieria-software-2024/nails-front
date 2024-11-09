@@ -1,8 +1,13 @@
 import React, { createContext, useState } from "react";
 
-export const ArticuloVentaContext = createContext();
+// Define un contexto con un valor predeterminado inicial.
+export const ArticuloVentaContext = createContext({
+  articulos: [],
+  setArticulos: () => {}
+});
 
 const ArticuloVentaProvider = ({ children }) => {
+  // Estado para almacenar los artículos de venta.
   const [articulos, setArticulos] = useState([]);
 
   return (
