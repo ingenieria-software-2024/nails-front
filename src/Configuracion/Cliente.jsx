@@ -8,57 +8,61 @@ export default function Cliente({ title }) {
   const navegacion = useNavigate();
 
   const { id } = useParams();
-
   const [cliente, setCliente] = useState({
     razonSocial: "",
     celular: "",
     mail: "",
   });
-
+  const [error, setError] = useState(""); // Estado para errores
   const { razonSocial, celular, mail } = cliente;
 
   useEffect(() => {
-    cargarCliente();
-  }, []);
+    if (id > 0) {
+      cargarCliente();
+    }
+  }, [id]);
 
   const cargarCliente = async () => {
-    console.log(id);
-    if (id > 0) {
-      console.log(id);
+    try {
       const resultado = await obtenerCliente(id);
-      console.log(resultado);
       setCliente(resultado);
+    } catch (error) {
+      setError("Error al cargar los datos del cliente.");
+      console.error("Error al cargar cliente:", error);
     }
   };
 
   const onInputChange = ({ target: { name, value } }) => {
-    //spread operator ... (expandir los atributos)
     setCliente({ ...cliente, [name]: value });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const urlBase = "http://localhost:8080/nails/clientes";
-    if (id > 0) {
-      await axios.put(`${urlBase}/${id}`, cliente);
-    } else {
-      await axios.post(urlBase, cliente);
+    try {
+      if (id > 0) {
+        await axios.put(`${urlBase}/${id}`, cliente);
+      } else {
+        await axios.post(urlBase, cliente);
+      }
+      navegacion("/clienteList");
+    } catch (error) {
+      setError("Error al guardar los datos del cliente.");
+      console.error("Error al guardar cliente:", error);
     }
-    // Redirigimos a la pagina de inicio
-    navegacion("/clienteList");
   };
 
   return (
     <div className="container">
       <div>
         <h1> Gestión de Clientes / {title} </h1>
-        <hr></hr>
+        <hr />
       </div>
 
-      <form onSubmit={(e) => onSubmit(e)}>
+      {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar error si existe */}
+
+      <form onSubmit={onSubmit}>
         <div className="mb-3">
           <label htmlFor="razonSocial" className="form-label">
-            {" "}
             Apellido Nombre
           </label>
           <input
@@ -66,32 +70,32 @@ export default function Cliente({ title }) {
             className="form-control"
             id="razonSocial"
             name="razonSocial"
-            required={true}
+            required
             value={razonSocial}
-            onChange={(e) => onInputChange(e)}
+            onChange={onInputChange}
+            aria-label="Nombre y apellido del cliente"
           />
         </div>
 
         <div className="mb-3">
           <label htmlFor="celular" className="form-label">
-            {" "}
-            celular
+            Celular
           </label>
           <input
             type="number"
             className="form-control"
             id="celular"
             name="celular"
-            required={true}
+            required
             value={celular}
-            onChange={(e) => onInputChange(e)}
+            onChange={onInputChange}
+            aria-label="Número de celular del cliente"
           />
         </div>
 
         <div className="mb-3">
           <label htmlFor="mail" className="form-label">
-            {" "}
-            mail
+            Mail
           </label>
           <input
             type="email"
@@ -99,7 +103,8 @@ export default function Cliente({ title }) {
             id="mail"
             name="mail"
             value={mail}
-            onChange={(e) => onInputChange(e)}
+            onChange={onInputChange}
+            aria-label="Correo electrónico del cliente"
           />
         </div>
 
