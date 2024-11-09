@@ -20,25 +20,30 @@ function App() {
         <Menu />
         <Providers>
           <Routes>
-            <Route exact path="/clienteList" element={<ListadoCliente />} />
-            <Route exact path="/cliente" element={<Cliente title="Nuevo" />} />
-            <Route exact path="/cliente/:id" element={<Cliente title="Editar" />} />
+            {/* Rutas de clientes */}
+            <Route path="/clienteList" element={<ListadoCliente />} />
+            <Route path="/cliente" element={<Cliente title="Nuevo" />} />
+            <Route path="/cliente/:id" element={<Cliente title="Editar" />} />
 
-            <Route exact path="/lineaList" element={<ListadoLinea />} />
-            <Route exact path="/linea" element={<Linea title="Nuevo" />} />
-            <Route exact path="/linea/:id" element={<Linea title="Editar" />} />
+            {/* Rutas de lineas */}
+            <Route path="/lineaList" element={<ListadoLinea />} />
+            <Route path="/linea" element={<Linea title="Nuevo" />} />
+            <Route path="/linea/:id" element={<Linea title="Editar" />} />
 
-            <Route exact path="/articuloList" element={<ListadoArticulosVenta />} />
-            <Route exact path="/articulo" element={<ArticuloVenta title="Nuevo" />} />
-            <Route exact path="/articulo/:id" element={<ArticuloVenta title="Editar" />} />
+            {/* Rutas de artículos de venta */}
+            <Route path="/articuloList" element={<ListadoArticulosVenta />} />
+            <Route path="/articulo" element={<ArticuloVenta title="Nuevo" />} />
+            <Route path="/articulo/:id" element={<ArticuloVenta title="Editar" />} />
 
-            <Route exact path="/tipoServicioList" element={<ListadoTipoServicio />} />
-            <Route exact path="/tipoServicio" element={<TipoServicio title="Nuevo" />} />
-            <Route exact path="/tipoServicio/:id" element={<TipoServicio title="Editar" />} />
+            {/* Rutas de tipos de servicios */}
+            <Route path="/tipoServicioList" element={<ListadoTipoServicio />} />
+            <Route path="/tipoServicio" element={<TipoServicio title="Nuevo" />} />
+            <Route path="/tipoServicio/:id" element={<TipoServicio title="Editar" />} />
 
-            <Route exact path="/servicioList" element={<ListadoServicio />} />
-            <Route exact path="/servicio" element={<Servicio title="Nuevo" />} />
-            <Route exact path="/servicio/:id" element={<Servicio title="Editar" />} />
+            {/* Rutas de servicios */}
+            <Route path="/servicioList" element={<ListadoServicio />} />
+            <Route path="/servicio" element={<Servicio title="Nuevo" />} />
+            <Route path="/servicio/:id" element={<Servicio title="Editar" />} />
           </Routes>
         </Providers>
       </BrowserRouter>
