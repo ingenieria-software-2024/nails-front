@@ -6,7 +6,12 @@ export async function obtenerLineas(consulta, page, pageSize) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: urlBase,
+      params: {
+        consulta,
+        page,
+        size: pageSize,
+      },
     });
     return data;
   } catch (error) {
@@ -33,7 +38,7 @@ export async function obtenerLinea(id) {
     // `${urlBase}/${id}`
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/linea/${id}`,
+      url: `${API_URL}/lineas/${id}`,
     });
     console.log(data);
     return data;
@@ -45,25 +50,27 @@ export async function obtenerLinea(id) {
 
 export async function newLinea(linea) {
   if (linea.id > 0) {
-    const { data } = await axios({
+    await axios({
       method: "PUT",
-      url: `${API_URL}/linea/${linea.id}`,
+      url: `${API_URL}/lineas/${linea.id}`,
       data: linea,
     });
   } else {
-    const { data } = await axios({
+    await axios({
       method: "POST",
-      url: `${API_URL}/linea`,
+      url: `${API_URL}/lineas`,
       data: linea,
     });
   }
 }
 
 export async function eliminarLineas(id) {
-  const urlBase = API_URL + "/lineaEliminar";
-  const { data } = await axios({
-    method: "PUT",
+  const urlBase = API_URL + "/lineas";
+
+  await axios({
+    method: "DELETE",
     url: `${urlBase}/${id}`,
   });
+
   return true;
 }

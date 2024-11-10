@@ -27,7 +27,7 @@ export async function obtenerServicio(id) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/servicio/${id}`,
+      url: `${API_URL}/servicios/${id}`,
     });
     return data;
   } catch (error) {
@@ -45,15 +45,16 @@ export async function newServicio(servicio) {
         url: `${API_URL}/servicios/${servicio.id}`,
         data: servicio,
       });
-      return data;
-    } else {
-      const { data } = await axios({
-        method: "POST",
-        url: `${API_URL}/servicios`,
-        data: servicio,
-      });
+
       return data;
     }
+    const { data } = await axios({
+      method: "POST",
+      url: `${API_URL}/servicios`,
+      data: servicio,
+    });
+
+    return data;
   } catch (error) {
     console.error("Error al guardar el servicio:", error);
     throw error;
@@ -64,9 +65,10 @@ export async function newServicio(servicio) {
 export async function eliminarServicio(id) {
   try {
     const { data } = await axios({
-      method: "PUT",
-      url: `${API_URL}/servicioEliminar/${id}`,
+      method: "DELETE",
+      url: `${API_URL}/servicios/${id}`,
     });
+
     return data;
   } catch (error) {
     console.error("Error al eliminar el servicio:", error);

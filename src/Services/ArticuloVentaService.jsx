@@ -6,8 +6,14 @@ export async function obtenerArticulosVenta(consulta, page, pageSize) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: urlBase,
+      params: {
+        consulta,
+        page,
+        size: pageSize,
+      },
     });
+
     return data;
   } catch (error) {
     console.error("Error buscando articulos:", error);
@@ -30,15 +36,13 @@ export async function obtenerArticuloVenta(id) {
 
 export async function newArticuloVenta(model) {
   if (model.id > 0) {
-    window.alert("entra por el put");
-    const { data } = await axios({
+    await axios({
       method: "PUT",
       url: `${API_URL}/articulos/${model.id}`,
       data: model,
     });
   } else {
-    window.alert("entra por el post");
-    const { data } = await axios({
+    await axios({
       method: "POST",
       url: `${API_URL}/articulos`,
       data: model,
@@ -47,10 +51,12 @@ export async function newArticuloVenta(model) {
 }
 
 export async function eliminarArticulosVenta(id) {
-  const urlBase = API_URL + "/articulosEliminar";
-  const { data } = await axios({
-    method: "PUT",
+  const urlBase = API_URL + "/articulos";
+
+  await axios({
+    method: "DELETE",
     url: `${urlBase}/${id}`,
   });
+
   return true;
 }

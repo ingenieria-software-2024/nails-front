@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../App.config";
+import { API_URL } from "../App.config.js";
 
 export async function obtenerClientes(consulta, page, pageSize) {
   const urlBase = API_URL + "/clientesPageQuery";
@@ -33,7 +33,7 @@ export async function obtenerCliente(id) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/cliente/${id}`,
+      url: `${API_URL}/clientes/${id}`,
     });
     console.log(data);
     return data;
@@ -45,25 +45,27 @@ export async function obtenerCliente(id) {
 
 export async function newCliente(cliente) {
   if (cliente.id > 0) {
-    const { data } = await axios({
+    await axios({
       method: "PUT",
-      url: `${API_URL}/cliente/${cliente.id}`,
+      url: `${API_URL}/clientes/${cliente.id}`,
       data: cliente,
     });
   } else {
-    const { data } = await axios({
+    await axios({
       method: "POST",
-      url: `${API_URL}/cliente`,
+      url: `${API_URL}/clientes`,
       data: cliente,
     });
   }
 }
 
 export async function eliminarCliente(id) {
-  const urlBase = API_URL + "/clienteEliminar";
-  const { data } = await axios({
-    method: "PUT",
+  const urlBase = API_URL + "/clientes";
+
+  await axios({
+    method: "DELETE",
     url: `${urlBase}/${id}`,
   });
+
   return true;
 }

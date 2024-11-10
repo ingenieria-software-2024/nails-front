@@ -3,11 +3,17 @@ import { API_URL } from "../App.config";
 
 export async function obtenerTiposServicios(consulta, page, pageSize) {
   try {
-    const urlBase = API_URL + "/tiposServiciosPageQuery";
+    const urlBase = API_URL + "/tiposerviciosPageQuery";
     const { data } = await axios({
       method: "GET",
-      url: `${urlBase}?consulta=${consulta}&page=${page}&size=${pageSize}`,
+      url: urlBase,
+      params: {
+        consulta,
+        page,
+        size: pageSize,
+      },
     });
+
     return data;
   } catch (error) {
     console.error("Error buscando tipos de servicios:", error);
@@ -17,11 +23,13 @@ export async function obtenerTiposServicios(consulta, page, pageSize) {
 
 export async function obtenerTiposServiciosForCombo() {
   try {
-    const urlBase = API_URL + "/tiposServicios";
+    const urlBase = API_URL + "/tiposervicios";
+
     const { data } = await axios({
       method: "GET",
       url: `${urlBase}`,
     });
+
     return data;
   } catch (error) {
     console.error("Error buscando tipos de servicios:", error);
@@ -33,8 +41,9 @@ export async function obtenerTipoServicio(id) {
   try {
     const { data } = await axios({
       method: "GET",
-      url: `${API_URL}/tiposServicios/${id}`,
+      url: `${API_URL}/tiposervicios/${id}`,
     });
+
     return data;
   } catch (error) {
     console.error("Error en buscar un tipo servicio", error);
@@ -44,15 +53,15 @@ export async function obtenerTipoServicio(id) {
 
 export async function newTipoServicio(tipoServicio) {
   if (tipoServicio.id > 0) {
-    const { data } = await axios({
+    await axios({
       method: "PUT",
-      url: `${API_URL}/tipoServicios/${tipoServicio.id}`,
+      url: `${API_URL}/tiposervicios/${tipoServicio.id}`,
       data: tipoServicio,
     });
   } else {
-    const { data } = await axios({
+    await axios({
       method: "POST",
-      url: `${API_URL}/tiposServicios`,
+      url: `${API_URL}/tiposervicios`,
       data: tipoServicio,
     });
   }
@@ -60,9 +69,11 @@ export async function newTipoServicio(tipoServicio) {
 
 export async function eliminarTipoServicio(id) {
   const urlBase = API_URL + "/tipoServicioEliminar";
-  const { data } = await axios({
-    method: "PUT",
+
+  await axios({
+    method: "DELETE",
     url: `${urlBase}/${id}`,
   });
+
   return true;
 }
