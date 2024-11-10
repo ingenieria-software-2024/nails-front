@@ -30,20 +30,19 @@ export const obtenerLineas2 = () => {
 
 // Obtener una línea por ID
 export const obtenerLinea = (id) => {
-  const url = `${API_URL}/linea/${id}`;
+  const url = `${API_URL}/lineas/${id}`;
   return fetchData("GET", url);
 };
 
 // Crear o actualizar una línea
 export const newLinea = async (linea) => {
-  const url = linea.id > 0 ? `${API_URL}/linea/${linea.id}` : `${API_URL}/linea`;
+  const url = linea.id > 0 ? `${API_URL}/lineas/${linea.id}` : `${API_URL}/lineas`;
   const method = linea.id > 0 ? "PUT" : "POST";
-  const response = await fetchData(method, url, linea);
-  return response;  // Retorna la respuesta para su manejo en la interfaz
+  return await fetchData(method, url, linea);
 };
 
 // Eliminar una línea
-export const eliminarLineas = (id) => {
-  const url = `${API_URL}/lineaEliminar/${id}`;
-  return fetchData("PUT", url);
+export const eliminarLineas = async (id) => {
+  const url = `${API_URL}/lineas/${id}`;
+  return await fetchData("DELETE", url);
 };

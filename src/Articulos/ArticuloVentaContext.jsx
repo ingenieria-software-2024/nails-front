@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
 // Define un contexto con un valor predeterminado inicial.
 export const ArticuloVentaContext = createContext({

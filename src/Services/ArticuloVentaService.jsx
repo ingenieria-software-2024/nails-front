@@ -31,12 +31,11 @@ export const obtenerArticuloVenta = (id) => {
 export const newArticuloVenta = async (model) => {
   const url = model.id > 0 ? `${API_URL}/articulos/${model.id}` : `${API_URL}/articulos`;
   const method = model.id > 0 ? "PUT" : "POST";
-  const response = await fetchData(method, url, model);
-  return response;  // Retorna la respuesta para su manejo en la interfaz
+  return await fetchData(method, url, model);  // Retorna la respuesta para su manejo en la interfaz
 };
 
 // Eliminar un artículo de venta
-export const eliminarArticulosVenta = (id) => {
+export const eliminarArticulosVenta = async (id) => {
   const url = `${API_URL}/articulosEliminar/${id}`;
-  return fetchData("PUT", url);
+  return await fetchData("PUT", url);
 };

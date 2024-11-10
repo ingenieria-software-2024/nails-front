@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IMAGEN_EDIT, IMAGEN_DELETE, ITEMS_PER_PAGE } from "../App.config";
 import { ServicioContext } from "./ServicioContext";
@@ -161,7 +161,7 @@ export default function ListadoServicio() {
                   <th scope="row">{servicio.id}</th>
 
                   <td>{servicio.clienteRazonSocial}</td>
-                  <td>{servicio.fechaDocumento}</td>
+                  <td>{new Date(servicio?.fechaDocumento).toLocaleString()}</td>
                   <td className="text-center">
                     <div>
                       <Link

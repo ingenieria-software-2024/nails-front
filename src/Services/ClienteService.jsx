@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../App.config";
+import { API_URL } from "../App.config.js";
 
 // Función genérica para manejar solicitudes HTTP
 const fetchData = async (method, url, data = null) => {
@@ -30,20 +30,19 @@ export const obtenerClientesForCombo = () => {
 
 // Obtener un cliente por ID
 export const obtenerCliente = (id) => {
-  const url = `${API_URL}/cliente/${id}`;
+  const url = `${API_URL}/clientes/${id}`;
   return fetchData("GET", url);
 };
 
 // Crear o actualizar un cliente
 export const newCliente = async (cliente) => {
-  const url = cliente.id > 0 ? `${API_URL}/cliente/${cliente.id}` : `${API_URL}/cliente`;
+  const url = cliente.id > 0 ? `${API_URL}/clientes/${cliente.id}` : `${API_URL}/clientes`;
   const method = cliente.id > 0 ? "PUT" : "POST";
-  const response = await fetchData(method, url, cliente);
-  return response;  // Retorna la respuesta para su manejo en la interfaz
+  return await fetchData(method, url, cliente);
 };
 
 // Eliminar un cliente
-export const eliminarCliente = (id) => {
-  const url = `${API_URL}/clienteEliminar/${id}`;
-  return fetchData("PUT", url);
+export const eliminarCliente = async (id) => {
+  const url = `${API_URL}/clientes/${id}`;
+  return await fetchData("DELETE", url);
 };

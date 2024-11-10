@@ -36,14 +36,13 @@ export const obtenerTipoServicio = (id) => {
 
 // Crear o actualizar un tipo de servicio
 export const newTipoServicio = async (tipoServicio) => {
-  const url = tipoServicio.id > 0 ? `${API_URL}/tipoServicios/${tipoServicio.id}` : `${API_URL}/tiposServicios`;
+  const url = tipoServicio.id > 0 ? `${API_URL}/tiposervicios/${tipoServicio.id}` : `${API_URL}/tiposervicios`;
   const method = tipoServicio.id > 0 ? "PUT" : "POST";
-  const response = await fetchData(method, url, tipoServicio);
-  return response;  // Retorna la respuesta para su manejo en la interfaz
+  return await fetchData(method, url, tipoServicio);
 };
 
 // Eliminar un tipo de servicio
-export const eliminarTipoServicio = (id) => {
+export const eliminarTipoServicio = async (id) => {
   const url = `${API_URL}/tipoServicioEliminar/${id}`;
-  return fetchData("PUT", url);
+  return await fetchData("DELETE", url);
 };

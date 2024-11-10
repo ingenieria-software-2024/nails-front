@@ -24,7 +24,7 @@ export const obtenerServicios = (consulta, page, pageSize) => {
 
 // Obtener un servicio por su ID
 export const obtenerServicio = (id) => {
-  const url = `${API_URL}/servicio/${id}`;
+  const url = `${API_URL}/servicios/${id}`;
   return fetchData("GET", url);
 };
 
@@ -32,12 +32,11 @@ export const obtenerServicio = (id) => {
 export const newServicio = async (servicio) => {
   const url = servicio.id > 0 ? `${API_URL}/servicios/${servicio.id}` : `${API_URL}/servicios`;
   const method = servicio.id > 0 ? "PUT" : "POST";
-  const response = await fetchData(method, url, servicio);
-  return response;  // Retorna la respuesta para su manejo en la interfaz
+  return await fetchData(method, url, servicio);
 };
 
 // Eliminar un servicio
-export const eliminarServicio = (id) => {
-  const url = `${API_URL}/servicioEliminar/${id}`;
-  return fetchData("PUT", url);
+export const eliminarServicio = async (id) => {
+  const url = `${API_URL}/servicios/${id}`;
+  return await fetchData("DELETE", url);
 };
