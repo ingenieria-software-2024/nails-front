@@ -1,24 +1,21 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ListadoCliente from "./Configuracion/ListadoCliente";
+import "./App.css";
+import ArticuloVenta from "./Articulos/ArticuloVenta";
+import ArticuloVentaProvider from "./Articulos/ArticuloVentaContext";
+import Linea from "./Articulos/Linea";
+import LineaProvider from "./Articulos/LineaContext";
+import ListadoArticulosVenta from "./Articulos/ListadoArticulosVenta";
+import ListadoLinea from "./Articulos/ListadoLinea";
 import Cliente from "./Configuracion/Cliente";
 import ClienteProvider from "./Configuracion/ClienteContext";
-import Menu from "./Menu";
-import ListadoLinea from "./Articulos/ListadoLinea";
-import Linea from "./Articulos/Linea";
-import ListadoArticulosVenta from "./Articulos/ListadoArticulosVenta";
-import ArticuloVenta from "./Articulos/ArticuloVenta";
-import LineaProvider from "./Articulos/LineaContext";
-import TipoServicioProvider from "./GServicios/TipoServicioContext";
-import TipoServicio from "./GServicios/TipoServicio";
-import ListadoTipoServicio from "./GServicios/ListadoTipoServicio";
-import ArticuloVentaProvider from "./Articulos/ArticuloVentaContext";
-import ServicioProvider from "./GServicios/ServicioContext";
-import Servicio from "./GServicios/Servicio";
+import ListadoCliente from "./Configuracion/ListadoCliente";
 import ListadoServicio from "./GServicios/ListadoServicio";
+import ListadoTipoServicio from "./GServicios/ListadoTipoServicio";
+import Servicio from "./GServicios/Servicio";
+import ServicioProvider from "./GServicios/ServicioContext";
+import TipoServicio from "./GServicios/TipoServicio";
+import TipoServicioProvider from "./GServicios/TipoServicioContext";
+import Menu from "./Menu";
 
 function App() {
   return (

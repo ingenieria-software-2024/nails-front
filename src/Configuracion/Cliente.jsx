@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerCliente } from "../Services/ClienteService";
 
 export default function Cliente({ title }) {
-  const urlBase = "http://localhost:8080/nails/clientes";
   const navegacion = useNavigate();
 
   const { id } = useParams();

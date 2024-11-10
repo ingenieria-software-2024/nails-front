@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { newServicio, obtenerServicio } from "../Services/ServicioService";
 import { obtenerClientesForCombo } from "../Services/ClienteService";
@@ -37,20 +37,11 @@ export default function Servicio({ title }) {
   useEffect(() => {
     const nuevoTotal = servicios.reduce(
       (acc, servicio) => acc + (parseFloat(servicio.precio) || 0),
-      0,
+      0
     );
     setTotal(nuevoTotal);
   }, [servicios]);
 
-  const cargarModel2 = async () => {
-    if (id > 0) {
-      const resultado = await obtenerServicio(id);
-      setServicio(resultado);
-      setSelectedCliente(resultado.cliente.id); // Establecer el cliente seleccionado
-      setFecha(new Date(resultado.fechaDocumento).toISOString().split("T")[0]); // Establecer la fecha
-      setServicios(resultado.listaItems); // Establecer los item servicios cargados
-    }
-  };
   const cargarModel = async () => {
     if (id > 0) {
       const resultado = await obtenerServicio(id);
@@ -97,7 +88,7 @@ export default function Servicio({ title }) {
 
     if (name === "tipoServicio") {
       const tipoServicioSeleccionado = tiposServicio.find(
-        (tipo) => tipo.id === parseInt(value),
+        (tipo) => tipo.id === parseInt(value)
       );
       newServicios[index] = {
         ...newServicios[index],

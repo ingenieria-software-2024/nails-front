@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ITEMS_PER_PAGE } from "../App.config";
 import { ClienteContext } from "./ClienteContext";
