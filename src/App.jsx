@@ -1,170 +1,74 @@
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import ArticuloVenta from "./Articulos/ArticuloVenta";
-import ArticuloVentaProvider from "./Articulos/ArticuloVentaContext";
-import Linea from "./Articulos/Linea";
-import LineaProvider from "./Articulos/LineaContext";
-import ListadoArticulosVenta from "./Articulos/ListadoArticulosVenta";
-import ListadoLinea from "./Articulos/ListadoLinea";
+import "./App.css"; // Importación adicional de App.css
+
+import Menu from "./Menu";
+import Providers from "./Providers";
+
+import ListadoCliente from "./Configuracion/ListadoCliente";
 import Cliente from "./Configuracion/Cliente";
 import ClienteProvider from "./Configuracion/ClienteContext";
-import ListadoCliente from "./Configuracion/ListadoCliente";
-import ListadoServicio from "./GServicios/ListadoServicio";
+
+import ListadoLinea from "./Articulos/ListadoLinea";
+import Linea from "./Articulos/Linea";
+import LineaProvider from "./Articulos/LineaContext";
+
+import ListadoArticulosVenta from "./Articulos/ListadoArticulosVenta";
+import ArticuloVenta from "./Articulos/ArticuloVenta";
+import ArticuloVentaProvider from "./Articulos/ArticuloVentaContext";
+
 import ListadoTipoServicio from "./GServicios/ListadoTipoServicio";
-import Servicio from "./GServicios/Servicio";
-import ServicioProvider from "./GServicios/ServicioContext";
 import TipoServicio from "./GServicios/TipoServicio";
 import TipoServicioProvider from "./GServicios/TipoServicioContext";
-import Menu from "./Menu";
+
+import ListadoServicio from "./GServicios/ListadoServicio";
+import Servicio from "./GServicios/Servicio";
+import ServicioProvider from "./GServicios/ServicioContext";
 
 function App() {
   return (
-    <div className="conteiner">
+    <div className="container">
       <BrowserRouter>
         <Menu />
-        <Routes>
-          <Route
-            exact
-            path="/clienteList"
-            element={
-              <ClienteProvider>
-                <ListadoCliente />
-              </ClienteProvider>
-            }
-          />
-
-          <Route
-            exact
-            path="/cliente"
-            element={
-              <ClienteProvider>
-                <Cliente title="Nuevo" />
-              </ClienteProvider>
-            }
-          />
-          <Route
-            exact
-            path="/cliente/:id"
-            element={
-              <ClienteProvider>
-                <Cliente title="Editar" />
-              </ClienteProvider>
-            }
-          />
-
-          <Route
-            exact
-            path="/lineaList"
-            element={
-              <LineaProvider>
-                <ListadoLinea />
-              </LineaProvider>
-            }
-          />
-          <Route
-            exact
-            path="/linea"
-            element={
-              <LineaProvider>
-                <Linea title="Nuevo" />
-              </LineaProvider>
-            }
-          />
-          <Route
-            exact
-            path="/linea/:id"
-            element={
-              <LineaProvider>
-                <Linea title="Editar" />
-              </LineaProvider>
-            }
-          />
-
-          <Route
-            exact
-            path="/articuloList"
-            element={
+        <Providers>
+          {/* Providers específicos de cada sección */}
+          <ClienteProvider>
+            <LineaProvider>
               <ArticuloVentaProvider>
-                <ListadoArticulosVenta />
-              </ArticuloVentaProvider>
-            }
-          />
+                <TipoServicioProvider>
+                  <ServicioProvider>
+                    <Routes>
+                      {/* Rutas de clientes */}
+                      <Route path="/clienteList" element={<ListadoCliente />} />
+                      <Route path="/cliente" element={<Cliente title="Nuevo" />} />
+                      <Route path="/cliente/:id" element={<Cliente title="Editar" />} />
 
-          <Route
-            exact
-            path="/articulo"
-            element={
-              <ArticuloVentaProvider>
-                <ArticuloVenta title="Nuevo" />
-              </ArticuloVentaProvider>
-            }
-          />
-          <Route
-            exact
-            path="/articulo/:id"
-            element={
-              <ArticuloVentaProvider>
-                <ArticuloVenta title="Editar" />
-              </ArticuloVentaProvider>
-            }
-          />
+                      {/* Rutas de líneas */}
+                      <Route path="/lineaList" element={<ListadoLinea />} />
+                      <Route path="/linea" element={<Linea title="Nuevo" />} />
+                      <Route path="/linea/:id" element={<Linea title="Editar" />} />
 
-          <Route
-            exact
-            path="/tipoServicioList"
-            element={
-              <TipoServicioProvider>
-                <ListadoTipoServicio />
-              </TipoServicioProvider>
-            }
-          />
-          <Route
-            exact
-            path="/tipoServicio"
-            element={
-              <TipoServicioProvider>
-                <TipoServicio title="Nuevo" />
-              </TipoServicioProvider>
-            }
-          />
-          <Route
-            exact
-            path="/tipoServicio/:id"
-            element={
-              <TipoServicioProvider>
-                <TipoServicio title="Editar" />
-              </TipoServicioProvider>
-            }
-          />
+                      {/* Rutas de artículos de venta */}
+                      <Route path="/articuloList" element={<ListadoArticulosVenta />} />
+                      <Route path="/articulo" element={<ArticuloVenta title="Nuevo" />} />
+                      <Route path="/articulo/:id" element={<ArticuloVenta title="Editar" />} />
 
-          <Route
-            exact
-            path="/servicioList"
-            element={
-              <ServicioProvider>
-                <ListadoServicio />
-              </ServicioProvider>
-            }
-          />
-          <Route
-            exact
-            path="/servicio"
-            element={
-              <ServicioProvider>
-                <Servicio title="Nuevo" />
-              </ServicioProvider>
-            }
-          />
-          <Route
-            exact
-            path="/servicio/:id"
-            element={
-              <ServicioProvider>
-                <Servicio title="Editar" />
-              </ServicioProvider>
-            }
-          />
-        </Routes>
+                      {/* Rutas de tipos de servicios */}
+                      <Route path="/tipoServicioList" element={<ListadoTipoServicio />} />
+                      <Route path="/tipoServicio" element={<TipoServicio title="Nuevo" />} />
+                      <Route path="/tipoServicio/:id" element={<TipoServicio title="Editar" />} />
+
+                      {/* Rutas de servicios */}
+                      <Route path="/servicioList" element={<ListadoServicio />} />
+                      <Route path="/servicio" element={<Servicio title="Nuevo" />} />
+                      <Route path="/servicio/:id" element={<Servicio title="Editar" />} />
+                    </Routes>
+                  </ServicioProvider>
+                </TipoServicioProvider>
+              </ArticuloVentaProvider>
+            </LineaProvider>
+          </ClienteProvider>
+        </Providers>
       </BrowserRouter>
     </div>
   );

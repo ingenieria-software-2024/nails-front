@@ -1,79 +1,48 @@
 import axios from "axios";
 import { API_URL } from "../App.config";
 
-export async function obtenerTiposServicios(consulta, page, pageSize) {
+// Función genérica para manejar solicitudes HTTP
+const fetchData = async (method, url, data = null, params = null) => {
   try {
-    const urlBase = API_URL + "/tiposerviciosPageQuery";
-    const { data } = await axios({
-      method: "GET",
-      url: urlBase,
-      params: {
-        consulta,
-        page,
-        size: pageSize,
-      },
-    });
-
-    return data;
+    const config = { method, url, params };
+    if (data) {
+      config.data = data;
+    }
+    const { data: responseData } = await axios(config);
+    return responseData;
   } catch (error) {
-    console.error("Error buscando tipos de servicios:", error);
-    throw error;
+    console.error(`Error en la solicitud ${method} a ${url}:`, error);
+    throw new Error("Error al procesar la solicitud.");
   }
-}
+};
 
-export async function obtenerTiposServiciosForCombo() {
-  try {
-    const urlBase = API_URL + "/tiposervicios";
+// Obtener una lista paginada de tipos de servicios
+export const obtenerTiposServicios = (consulta, page, pageSize) => {
+  const url = `${API_URL}/tiposServiciosPageQuery`;
+  return fetchData("GET", url, null, { consulta, page, pageSize });
+};
 
-    const { data } = await axios({
-      method: "GET",
-      url: `${urlBase}`,
-    });
+// Obtener todos los tipos de servicios para combo
+export const obtenerTiposServiciosForCombo = () => {
+  const url = `${API_URL}/tiposServicios`;
+  return fetchData("GET", url);
+};
 
-    return data;
-  } catch (error) {
-    console.error("Error buscando tipos de servicios:", error);
-    throw error;
-  }
-}
+// Obtener un tipo de servicio por su ID
+export const obtenerTipoServicio = (id) => {
+  const url = `${API_URL}/tiposServicios/${id}`;
+  return fetchData("GET", url);
+};
 
-export async function obtenerTipoServicio(id) {
-  try {
-    const { data } = await axios({
-      method: "GET",
-      url: `${API_URL}/tiposervicios/${id}`,
-    });
+// Crear o actualizar un tipo de servicio
+export const newTipoServicio = async (tipoServicio) => {
+  const url = tipoServicio.id > 0 ? `${API_URL}/tiposervicios/${tipoServicio.id}` : `${API_URL}/tiposervicios`;
+  const method = tipoServicio.id > 0 ? "PUT" : "POST";
+  return await fetchData(method, url, tipoServicio);
+};
 
-    return data;
-  } catch (error) {
-    console.error("Error en buscar un tipo servicio", error);
-    throw error;
-  }
-}
-
-export async function newTipoServicio(tipoServicio) {
-  if (tipoServicio.id > 0) {
-    await axios({
-      method: "PUT",
-      url: `${API_URL}/tiposervicios/${tipoServicio.id}`,
-      data: tipoServicio,
-    });
-  } else {
-    await axios({
-      method: "POST",
-      url: `${API_URL}/tiposervicios`,
-      data: tipoServicio,
-    });
-  }
-}
-
-export async function eliminarTipoServicio(id) {
-  const urlBase = API_URL + "/tipoServicioEliminar";
-
-  await axios({
-    method: "DELETE",
-    url: `${urlBase}/${id}`,
-  });
-
-  return true;
-}
+// Eliminar un tipo de servicio
+export const eliminarTipoServicio = async (id) => {
+  const url = `${API_URL}/tipoServicioEliminar/${id}`;
+  return await fetchData("DELETE", url);
+};

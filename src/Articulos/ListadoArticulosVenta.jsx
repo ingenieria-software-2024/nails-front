@@ -20,17 +20,17 @@ export default function ListadoArticulosVenta() {
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
-  }); //se utiliza para el orden
+  });
 
   useEffect(() => {
-    getDatos();
+    fetchData();
   }, [page, pageSize, consulta]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
 
-  const getDatos = async () => {
+  const fetchData = async () => {
     console.log("carga " + page);
     obtenerArticulosVenta(consulta, page, pageSize)
       .then((response) => {
@@ -42,15 +42,15 @@ export default function ListadoArticulosVenta() {
       });
   };
 
-  const handConsultaChange = (e) => {
+  const handleConsultaChange = (e) => {
     setConsulta(e.target.value);
   };
 
-  const eliminar = async (id) => {
+  const handleDelete = async (id) => {
     try {
       const eliminacionExitosa = await eliminarArticulosVenta(id);
       if (eliminacionExitosa) {
-        getDatos();
+        fetchData();
       } else {
         console.error("Error al eliminar el articulo");
       }
@@ -59,8 +59,7 @@ export default function ListadoArticulosVenta() {
     }
   };
 
-  ///////////////////////////////////////Para el orden de las tablas///////////////////////////////////////////////////
-
+  // Ordenación de la tabla
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -85,13 +84,14 @@ export default function ListadoArticulosVenta() {
     return sorted;
   };
 
-  ///////////////////////////////////////Hasta aca para el orden de las tablas///////////////////////////////////////////////////
+  // Cálculo del total del servicio
+  const totalService = articulos.reduce((acc, articulo) => acc + articulo.precio, 0);
 
   return (
     <div className="container">
       <div>
         <h1> Gestión de Articulos Venta </h1>
-        <hr></hr>
+        <hr />
       </div>
 
       <div className="row d-md-flex justify-content-md-end">
@@ -103,86 +103,70 @@ export default function ListadoArticulosVenta() {
             type="search"
             aria-label="Search"
             value={consulta}
-            onChange={handConsultaChange}
-          ></input>
+            onChange={handleConsultaChange}
+          />
         </div>
         <div className="col-1">
-          <button
-            onClick={() => getDatos()}
-            className="btn btn-outline-success"
-            type="submit"
-          >
+          <button onClick={() => fetchData()} className="btn btn-outline-success" type="submit">
             Buscar
           </button>
         </div>
       </div>
-      <hr></hr>
+      <hr />
       <table className="table table-striped table-hover align-middle">
         <thead className="table-dark">
           <tr>
             <th scope="col" onClick={() => handleSort("id")}>
               #
               {sortConfig.key === "id" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
+                <span>{sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}</span>
               )}
             </th>
             <th scope="col" onClick={() => handleSort("denominacion")}>
               Denominación
               {sortConfig.key === "denominacion" && (
-                <span>
-                  {sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}
-                </span>
+                <span>{sortConfig.direction === "ascending" ? " 🔽" : " 🔼"}</span>
               )}
             </th>
-
             <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {
-            //iteramos empleados
-            sortedData().map((articulo, indice) => (
-              <tr key={indice}>
-                <th scope="row">{articulo.id}</th>
-                <td>{articulo.denominacion}</td>
+          {sortedData().map((articulo, indice) => (
+            <tr key={indice}>
+              <th scope="row">{articulo.id}</th>
+              <td>{articulo.denominacion}</td>
 
-                <td className="text-center">
-                  <div>
-                    <Link
-                      to={`/articulo/${articulo.id}`}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      <img
-                        src={IMAGEN_EDIT}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Editar
-                    </Link>
+              <td className="text-center">
+                <div>
+                  <Link to={`/articulo/${articulo.id}`} className="btn btn-link btn-sm me-3">
+                    <img
+                      src={IMAGEN_EDIT}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                      }}
+                    />
+                    Editar
+                  </Link>
 
-                    <button
-                      onClick={() => eliminar(articulo.id)}
-                      className="btn btn-link btn-sm me-3"
-                    >
-                      {" "}
-                      <img
-                        src={IMAGEN_DELETE}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                        }}
-                      />
-                      Eliminar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          }
+                  <button
+                    onClick={() => handleDelete(articulo.id)}
+                    className="btn btn-link btn-sm me-3"
+                  >
+                    <img
+                      src={IMAGEN_DELETE}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                      }}
+                    />
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
@@ -199,15 +183,13 @@ export default function ListadoArticulosVenta() {
         </div>
       </div>
 
-      {/* /////////////////////// Esto se utiliza para hacer la paginacion  ///////////////////////////////// */}
-
       <div className="pagination d-md-flex justify-content-md-end">
         {Array.from({ length: totalPages }, (_, i) => i).map((pageNumber) => (
           <a
             key={pageNumber}
             href="#"
             onClick={(e) => {
-              e.preventDefault(); // Previene el comportamiento predeterminado del enlace
+              e.preventDefault();
               handlePageChange(pageNumber);
             }}
           >
@@ -216,7 +198,10 @@ export default function ListadoArticulosVenta() {
         ))}
       </div>
 
-      {/* /////////////////////// fin de la paginacion  ///////////////////////////////// */}
+      {/* Total del servicio */}
+      <div className="mt-3">
+        <h4>Total: ${totalService.toFixed(2)}</h4>
+      </div>
     </div>
   );
 }

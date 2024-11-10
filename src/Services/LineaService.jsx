@@ -1,76 +1,48 @@
 import axios from "axios";
 import { API_URL } from "../App.config";
 
-export async function obtenerLineas(consulta, page, pageSize) {
-  const urlBase = API_URL + "/lineasPageQuery";
+// Función genérica para manejar solicitudes HTTP
+const fetchData = async (method, url, data = null) => {
   try {
-    const { data } = await axios({
-      method: "GET",
-      url: urlBase,
-      params: {
-        consulta,
-        page,
-        size: pageSize,
-      },
-    });
-    return data;
+    const config = { method, url };
+    if (data) {
+      config.data = data;
+    }
+    const { data: responseData } = await axios(config);
+    return responseData;
   } catch (error) {
-    console.error("Error buscando lineas:", error);
-    throw error;
+    console.error(`Error en la solicitud ${method} a ${url}:`, error);
+    throw new Error("Error al procesar la solicitud.");
   }
-}
+};
 
-export async function obtenerLineas2() {
-  try {
-    const { data } = await axios({
-      method: "GET",
-      url: `${API_URL}/lineas`,
-    });
-    return data;
-  } catch (error) {
-    console.error("Error buscando lineas:", error);
-    throw error;
-  }
-}
+// Obtener líneas con paginación y búsqueda
+export const obtenerLineas = (consulta, page, pageSize) => {
+  const url = `${API_URL}/lineasPageQuery?consulta=${consulta}&page=${page}&size=${pageSize}`;
+  return fetchData("GET", url);
+};
 
-export async function obtenerLinea(id) {
-  try {
-    // `${urlBase}/${id}`
-    const { data } = await axios({
-      method: "GET",
-      url: `${API_URL}/lineas/${id}`,
-    });
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error("Error en buscar una linea:", error);
-    throw error;
-  }
-}
+// Obtener todas las líneas para combo
+export const obtenerLineas2 = () => {
+  const url = `${API_URL}/lineas`;
+  return fetchData("GET", url);
+};
 
-export async function newLinea(linea) {
-  if (linea.id > 0) {
-    await axios({
-      method: "PUT",
-      url: `${API_URL}/lineas/${linea.id}`,
-      data: linea,
-    });
-  } else {
-    await axios({
-      method: "POST",
-      url: `${API_URL}/lineas`,
-      data: linea,
-    });
-  }
-}
+// Obtener una línea por ID
+export const obtenerLinea = (id) => {
+  const url = `${API_URL}/lineas/${id}`;
+  return fetchData("GET", url);
+};
 
-export async function eliminarLineas(id) {
-  const urlBase = API_URL + "/lineas";
+// Crear o actualizar una línea
+export const newLinea = async (linea) => {
+  const url = linea.id > 0 ? `${API_URL}/lineas/${linea.id}` : `${API_URL}/lineas`;
+  const method = linea.id > 0 ? "PUT" : "POST";
+  return await fetchData(method, url, linea);
+};
 
-  await axios({
-    method: "DELETE",
-    url: `${urlBase}/${id}`,
-  });
-
-  return true;
-}
+// Eliminar una línea
+export const eliminarLineas = async (id) => {
+  const url = `${API_URL}/lineas/${id}`;
+  return await fetchData("DELETE", url);
+};

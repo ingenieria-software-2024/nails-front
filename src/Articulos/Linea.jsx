@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { newLinea, obtenerLinea } from "../Services/LineaService";
 
 export default function Linea({ title }) {
-  const navegacion = useNavigate();
-
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [linea, setLinea] = useState({
@@ -19,46 +18,50 @@ export default function Linea({ title }) {
 
   const cargarModel = async () => {
     if (id > 0) {
-      console.log(id);
-      const resultado = await obtenerLinea(id);
-      console.log(resultado);
-      setLinea(resultado);
+      try {
+        const resultado = await obtenerLinea(id);
+        setLinea(resultado);
+      } catch (error) {
+        console.error("Error al cargar la línea:", error);
+      }
     }
   };
 
-  const onInputChange = ({ target: { name, value } }) => {
-    //spread operator ... (expandir los atributos)
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
     setLinea({ ...linea, [name]: value });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    newLinea(linea);
-    // Redirigimos a la pagina de inicio
-    navegacion("/lineaList");
+    try {
+      await newLinea(linea);
+      navigate("/lineaList");
+    } catch (error) {
+      console.error("Error al guardar la línea:", error);
+    }
   };
 
   return (
     <div className="container">
       <div>
-        <h1> Gestión de Linea / {title} </h1>
-        <hr></hr>
+        <h1>Gestión de Línea / {title}</h1>
+        <hr />
       </div>
 
-      <form onSubmit={(e) => onSubmit(e)}>
+      <form onSubmit={onSubmit}>
         <div className="mb-3">
           <label htmlFor="denominacion" className="form-label">
-            {" "}
-            Denominacion
+            Denominación
           </label>
           <input
             type="text"
             className="form-control"
             id="denominacion"
             name="denominacion"
-            required={true}
+            required
             value={denominacion}
-            onChange={(e) => onInputChange(e)}
+            onChange={onInputChange}
           />
         </div>
 
@@ -69,9 +72,9 @@ export default function Linea({ title }) {
             </button>
           </div>
           <div className="col-4">
-            <a href="/lineaList" className="btn btn-info btn-sm me-3">
+            <Link to="/lineaList" className="btn btn-info btn-sm me-3">
               Regresar
-            </a>
+            </Link>
           </div>
         </div>
       </form>

@@ -6,88 +6,78 @@ import {
 } from "../Services/ArticuloVentaService";
 import { obtenerLineas2 } from "../Services/LineaService";
 
-export default function ArticuloVenta({ title }) {
-  const navegacion = useNavigate();
-
+export default function ArticuloVentaForm({ title }) {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [articulo, setArticulo] = useState({
     denominacion: "",
     linea: 0,
+    total: 0,
   });
 
   const [listaLineas, setListaLineas] = useState([]);
-  const [selectedLinea, setSelectedLinea] = useState({});
-  const { denominacion, linea } = articulo;
+  const [lineaSeleccionada, setLineaSeleccionada] = useState("");
+  const { denominacion, linea, total } = articulo;
 
   useEffect(() => {
-    cargarModel();
+    cargarArticulo();
     cargarLineas();
   }, []);
 
-  const cargarModel = async () => {
+  const cargarArticulo = async () => {
     if (id > 0) {
-      console.log(id);
       const resultado = await obtenerArticuloVenta(id);
       setArticulo(resultado);
-      setSelectedLinea(resultado.linea);
+      setLineaSeleccionada(resultado.linea);
     }
   };
 
   const cargarLineas = async () => {
-    console.log(id);
-
     const resultado = await obtenerLineas2();
     setListaLineas(resultado);
   };
 
   const onInputChange = ({ target: { name, value } }) => {
-    //spread operator ... (expandir los atributos)
     setArticulo({ ...articulo, [name]: value });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
     const data = {
       ...articulo,
-      linea: selectedLinea, // Asumiendo que la línea seleccionada es el id de la línea
+      linea: lineaSeleccionada,
     };
-    window.alert("id lina" + selectedLinea);
     newArticuloVenta(data);
-    // Redirigimos a la pagina de inicio
-    navegacion("/articuloList");
+    navigate("/articuloList");
   };
 
   return (
     <div className="container">
       <div>
-        <h1> Gestión de articulo / {title} </h1>
-        <hr></hr>
+        <h1>Gestión de artículo / {title}</h1>
+        <hr />
       </div>
 
-      <form onSubmit={(e) => onSubmit(e)}>
+      <form onSubmit={onSubmit}>
         <div className="mb-3">
-          <label htmlFor="denominacion" className="form-label">
-            {" "}
-            Denominacion
-          </label>
+          <label htmlFor="denominacion" className="form-label">Denominación</label>
           <input
             type="text"
             className="form-control"
             id="denominacion"
             name="denominacion"
-            required={true}
+            required
             value={denominacion}
-            onChange={(e) => onInputChange(e)}
+            onChange={onInputChange}
           />
 
-          <label htmlFor="listaLineas">Selecciona una linea:</label>
+          <label htmlFor="listaLineas">Selecciona una línea:</label>
           <select
             id="listaLineas"
-            value={selectedLinea}
-            required={true}
-            onChange={(e) => setSelectedLinea(e.target.value)}
+            value={lineaSeleccionada}
+            required
+            onChange={(e) => setLineaSeleccionada(e.target.value)}
           >
             <option value="">Seleccione...</option>
             {listaLineas.map((linea) => (
@@ -96,6 +86,19 @@ export default function ArticuloVenta({ title }) {
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="total" className="form-label">Total del Servicio</label>
+          <input
+            type="text"
+            className="form-control"
+            id="total"
+            name="total"
+            required
+            value={`$${total.toFixed(2)}`}
+            disabled // Para hacer el campo de solo lectura
+          />
         </div>
 
         <div className="row d-md-flex justify-content-md-end">
@@ -111,6 +114,26 @@ export default function ArticuloVenta({ title }) {
           </div>
         </div>
       </form>
+
+      {/* Ejemplo de tabla para visualizar los artículos */}
+      <table className="table mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Denominación</th>
+            <th>Línea</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listaLineas.map((linea) => (
+            <tr key={linea.id}>
+              <td>{linea.id}</td>
+              <td>{linea.denominacion}</td>
+              <td>{linea.nombreLinea}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

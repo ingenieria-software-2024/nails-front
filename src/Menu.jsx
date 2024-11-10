@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 
 export default function Menu() {
   return (
-    <div className="conteiner">
+    <div className="container">
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="navbar-brand estiloTitulo" href="/">
+          <Link className="navbar-brand estiloTitulo" to="/">
             Nails System
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -22,11 +22,10 @@ export default function Menu() {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <Link className="nav-link active" aria-current="page" to="/">
                   Home
-                </a>
+                </Link>
               </li>
-              {}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -39,38 +38,28 @@ export default function Menu() {
                 </a>
                 <ul className="dropdown-menu">
                   <li className="nav-item">
-                    {" "}
                     <Link className="nav-link" to="/clienteList">
-                      {" "}
-                      Cliente{" "}
+                      Cliente
                     </Link>
                   </li>
                   <li className="nav-item">
-                    {" "}
                     <Link className="nav-link" to="/lineaList">
-                      {" "}
-                      Linea{" "}
+                      Linea
                     </Link>
                   </li>
                   <li className="nav-item">
-                    {" "}
                     <Link className="nav-link" to="/articuloList">
-                      {" "}
-                      Articulo{" "}
+                      Articulo
                     </Link>
                   </li>
                   <li className="nav-item">
-                    {" "}
                     <Link className="nav-link" to="/tipoServicioList">
-                      {" "}
-                      Tipo Servicio{" "}
+                      Tipo Servicio
                     </Link>
                   </li>
                   <li className="nav-item">
-                    {" "}
                     <Link className="nav-link" to="/servicioList">
-                      {" "}
-                      Servicio{" "}
+                      Servicio
                     </Link>
                   </li>
                 </ul>

@@ -22,8 +22,6 @@ export default function ListadoServicio() {
 
   useEffect(() => {
     getDatos();
-
-    console.log("Servicios actualizados:", servicios); // Agrega este log para verificar los datos
   }, [page, pageSize, consulta]);
 
   const getDatos = async () => {
@@ -34,7 +32,7 @@ export default function ListadoServicio() {
       setServicios(response.content);
       setTotalPages(response.totalPages);
     } catch (err) {
-      setError("Error fetching items");
+      setError("Error al obtener los servicios.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +58,7 @@ export default function ListadoServicio() {
           console.error("Error al eliminar servicio");
         }
       } catch (error) {
-        console.error("Error al eliminar la línea:", error);
+        console.error("Error al eliminar servicio:", error);
       }
     }
   };

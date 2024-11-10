@@ -21,10 +21,7 @@ export default function Servicio({ title }) {
   const [errors, setErrors] = useState({
     fecha: "",
     cliente: "",
-    servicios: Array(servicios.length).fill({
-      tipoServicio: "",
-      precio: "",
-    }),
+    servicios: [],
   });
 
   useEffect(() => {
@@ -43,7 +40,7 @@ export default function Servicio({ title }) {
   }, [servicios]);
 
   const cargarModel = async () => {
-    if (id > 0) {
+    if (id) {
       const resultado = await obtenerServicio(id);
       setServicio(resultado);
       setSelectedCliente(String(resultado.cliente.id)); // Convertir a string
@@ -63,22 +60,11 @@ export default function Servicio({ title }) {
   };
 
   const handleAddServicio = () => {
-    setServicios([
-      ...servicios,
-      { tipoServicio: "", precio: "", observaciones: "" },
-    ]);
+    setServicios([...servicios, { tipoServicio: "", precio: "", observaciones: "" }]);
   };
 
   const handleRemoveServicio = (index) => {
-    const newServicios = [...servicios];
-    newServicios.splice(index, 1);
-    setServicios(newServicios);
-  };
-
-  const handleServicioChangeBoorar = (index, event) => {
-    const { name, value } = event.target;
-    const newServicios = [...servicios];
-    newServicios[index] = { ...newServicios[index], [name]: value };
+    const newServicios = servicios.filter((_, i) => i !== index);
     setServicios(newServicios);
   };
 

@@ -1,6 +1,16 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState, useContext } from "react";
 
-export const LineaContext = createContext();
+// Creación del contexto
+export const LineaContext = createContext(null);
+
+// Hook personalizado para facilitar el uso del contexto
+export const useLineaContext = () => {
+  const context = useContext(LineaContext);
+  if (!context) {
+    throw new Error("useLineaContext debe usarse dentro de LineaProvider");
+  }
+  return context;
+};
 
 const LineaProvider = ({ children }) => {
   const [lineas, setLineas] = useState([]);
